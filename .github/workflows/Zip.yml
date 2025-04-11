@@ -1,0 +1,37 @@
+name: Extract SchoolVibe Zip and Remove
+
+on:
+  push:
+    paths:
+      - '**/SchoolVibe.zip'
+
+jobs:
+  unzip-and-remove:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Extract SchoolVibe.zip
+        run: |
+          for zipfile in $(find . -name "SchoolVibe.zip" -type f); do
+            echo "Extracting $zipfile"
+            unzip -o "$zipfile" -d "$(dirname "$zipfile")"
+            git add "$(dirname "$zipfile")"
+          done
+          
+      - name: Remove SchoolVibe.zip
+        run: |
+          for zipfile in $(find . -name "SchoolVibe.zip" -type f); do
+            echo "Removing $zipfile"
+            git rm "$zipfile"
+          done
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Extract SchoolVibe.zip and remove zip file" || echo "No changes to commit"
+          git push
