@@ -3,7 +3,7 @@ name: Extract SchoolVibe Zip and Remove
 on:
   push:
     paths:
-      - '**/SchoolVibe (2).zip'
+      - '**/SchoolVibe.zip'
 
 jobs:
   unzip-and-remove:
